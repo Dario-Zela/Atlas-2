@@ -1,0 +1,20 @@
+﻿Editor
+1.0.0.0
+
+winexe
+C#
+.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\
+Editor
+none
+false
+TRACE;DEBUG;NET;NET6_0;NETCOREAPP
+C:\dev\Atlas 2\Editor\App.xaml
+4635218058
+
+81419053315
+1941645785384
+Browser\Browser.xaml;Browser\ExistingProjects.xaml;Browser\NewProject.xaml;MainWindow.xaml;
+
+False
+
