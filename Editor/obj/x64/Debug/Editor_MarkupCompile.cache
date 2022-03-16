@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\dev\Atlas 2\Editor\App.xaml
-4635218058
+41365355589
 
-6292836628
+10-1067035758
 1941645785384
-Browser\Browser.xaml;Browser\ExistingProjects.xaml;Browser\NewProject.xaml;MainWindow.xaml;
+Browser\Browser.xaml;Browser\ExistingProjectsView.xaml;Browser\NewProjectView.xaml;MainWindow.xaml;
 
 False
 

@@ -18,9 +18,9 @@ namespace Editor.Browser
     /// <summary>
     /// Interaction logic for NewProject.xaml
     /// </summary>
-    public partial class New_Project : UserControl
+    public partial class NewProjectView : UserControl
     {
-        public New_Project()
+        public NewProjectView()
         {
             InitializeComponent();
         }

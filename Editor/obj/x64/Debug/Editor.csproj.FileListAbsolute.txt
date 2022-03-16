@@ -5,14 +5,12 @@ C:\dev\Atlas 2\out\bin\x64\Debug\Editor.dll
 C:\dev\Atlas 2\out\bin\x64\Debug\Editor.pdb
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.csproj.AssemblyReference.cache
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\Browser.g.cs
-C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\ExistingProjects.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\MainWindow.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\App.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor_MarkupCompile.cache
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor_MarkupCompile.lref
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\Browser.baml
-C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\ExistingProjects.baml
 C:\dev\Atlas 2\Editor\obj\x64\Debug\MainWindow.baml
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.g.resources
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.GeneratedMSBuildEditorConfig.editorconfig
@@ -24,5 +22,7 @@ C:\dev\Atlas 2\Editor\obj\x64\Debug\refint\Editor.dll
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.pdb
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.genruntimeconfig.cache
 C:\dev\Atlas 2\Editor\obj\x64\Debug\ref\Editor.dll
-C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\NewProject.g.cs
-C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\NewProject.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\ExistingProjectsView.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\NewProjectView.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\ExistingProjectsView.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Browser\NewProjectView.baml
