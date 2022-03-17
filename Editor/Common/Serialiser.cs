@@ -25,18 +25,18 @@ namespace Editor
             }
         }
 
-        public static T FromFile<T>(string path)
+        public static T? FromFile<T>(string path)
         {
             try
             {
                 using var filestream = new FileStream(path, FileMode.Open);
                 var serialiser = new DataContractSerializer(typeof(T));
-                return (T)serialiser.ReadObject(filestream);
+                return (T?)serialiser.ReadObject(filestream);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return default(T);
+                return default;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,22 @@ namespace Editor.Browser
         public NewProjectView()
         {
             InitializeComponent();
+        }
+
+        private void OnCreate(object sender, RoutedEventArgs e)
+        {
+            NewProject viewModel = (NewProject)DataContext;
+            string projectPath = viewModel.CreateProject((ProjectTemplate)TemplatesView.SelectedItem);
+
+            bool dialougeResult = false;
+            var window = Window.GetWindow(this);
+
+            if (string.IsNullOrEmpty(projectPath))
+            {
+                dialougeResult = true;
+            }
+            window.DialogResult = dialougeResult;
+            window.Close();
         }
     }
 }
