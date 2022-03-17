@@ -30,7 +30,8 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock FontSize="20">Templates</TextBlock>
-                <ListView  Width="200" Grid.Row="1" ItemsSource="{Binding ProjectTemplates}" SelectionMode="Single">
+                <ListView x:Name="TemplatesView" SelectedIndex="0"
+                          Width="200" Grid.Row="1" ItemsSource="{Binding ProjectTemplates}" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="10">
@@ -51,16 +52,16 @@
                 <StackPanel Grid.Row="1" Width="380">
                     <StackPanel Margin="20,20,20,0" Height="70" Orientation="Vertical">
                         <TextBlock FontSize="20" Margin="0,0,0,10">Name</TextBlock>
-                        <TextBox Height="20" Text="{Binding ProjectName}"/>
+                        <TextBox Height="20" Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Left" Margin="20" Height="70" Orientation="Vertical">
                         <TextBlock FontSize="20" Margin="0,0,0,10">Path</TextBlock>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Width="280" Height="20" Text="{Binding ProjectPath}"/>
+                            <TextBox Width="280" Height="20" Text="{Binding ProjectPath, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Margin="10">Browse</Button>
                         </StackPanel>
                     </StackPanel>
-                    <Button Margin="0,50,0,0" HorizontalAlignment="Right" Width="100">Create</Button>
+                    <Button Margin="0,50,0,0" HorizontalAlignment="Right" IsEnabled="{Binding IsValid}" Click="OnCreate" Width="100">Create</Button>
                 </StackPanel>
             </Grid>
         </Grid>
