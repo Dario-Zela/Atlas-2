@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace Editor.Editors
+{
+    /// <summary>
+    /// Interaction logic for SceneBar.xaml
+    /// </summary>
+    public partial class HierarchyView : UserControl
+    {
+        public HierarchyView()
+        {
+            InitializeComponent();
+        }
+
+        private void AddNewScene(object sender, RoutedEventArgs e)
+        {
+            var viewModel = DataContext as Project;
+            viewModel!.AddScene("New Scene" + viewModel.Scenes!.Count);
+
+            UndoRedoManager.Add(new UndoRedoAction(
+                "New Scene",
+                () => { viewModel.RemoveScene(viewModel.Scenes.Last()); },
+                () => { viewModel!.AddScene("New Scene" + viewModel.Scenes!.Count); }
+                ));
+        }
+    }
+}

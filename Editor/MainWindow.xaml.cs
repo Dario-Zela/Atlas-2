@@ -23,21 +23,32 @@ namespace Editor
         public MainWindow()
         {
             // TODO: Initialise Components
-
+            UndoRedoManager.Initialise();
             OpenHub();
-            Hide();
+            InitializeComponent();
+            Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Closing -= MainWindow_Closing;
+            Project.Current?.Unload();
         }
 
         private void OpenHub()
         {
+            Hide();
             var hub = new Browser.Browser();
-            if (hub.ShowDialog() == false)
+            if (hub.ShowDialog() == false || hub.DataContext == null)
             {
                 Application.Current.Shutdown();
             }
             else
             {
+                Show();
 
+                Project.Current?.Unload();
+                DataContext = hub.DataContext;
             }
         }
     }

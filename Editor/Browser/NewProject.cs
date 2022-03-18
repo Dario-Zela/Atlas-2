@@ -74,7 +74,7 @@ namespace Editor.Browser
         }
 
         private readonly ObservableCollection<ProjectTemplate> _projectTemplates = new();
-        public ReadOnlyCollection<ProjectTemplate> ProjectTemplates { get; }
+        public ReadOnlyObservableCollection<ProjectTemplate> ProjectTemplates { get; }
 
         private bool ValidateProject()
         {
@@ -125,9 +125,9 @@ namespace Editor.Browser
             try
             {
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                foreach (var foulder in projectTemplate.Folders)
+                foreach (var folder in projectTemplate.Folders)
                 {
-                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path) ?? "", foulder)));
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path) ?? "", folder)));
                 }
 
                 var directory = new DirectoryInfo(path + ".Atlas");
@@ -149,7 +149,7 @@ namespace Editor.Browser
 
         public NewProject()
         {
-            ProjectTemplates = new ReadOnlyCollection<ProjectTemplate>(_projectTemplates);
+            ProjectTemplates = new ReadOnlyObservableCollection<ProjectTemplate>(_projectTemplates);
 
             try
             {

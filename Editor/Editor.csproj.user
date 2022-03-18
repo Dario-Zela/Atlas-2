@@ -11,6 +11,12 @@
     <Compile Update="Browser\NewProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Editors\WorldEditor\HierarchyView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Editors\WorldEditor\WorldEditor.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Browser\ExistingProjectsView.xaml">
@@ -20,6 +26,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Browser\NewProjectView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\HierarchyView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\WorldEditor.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
