@@ -58,10 +58,10 @@
                         <TextBlock FontSize="20" Margin="0,0,0,10">Path</TextBlock>
                         <StackPanel Orientation="Horizontal">
                             <TextBox Width="280" Height="20" Text="{Binding ProjectPath, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button Margin="10">Browse</Button>
+                            <Button Click="Browse_ButtonClick" Margin="10">Browse</Button>
                         </StackPanel>
                     </StackPanel>
-                    <Button Margin="0,50,0,0" HorizontalAlignment="Right" IsEnabled="{Binding IsValid}" Click="OnCreate" Width="100">Create</Button>
+                    <Button Margin="0,50,0,0" HorizontalAlignment="Right" IsEnabled="{Binding IsValid}" Click="Create_ButtonClick" Width="100">Create</Button>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -5,7 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Editor.Browser"
              mc:Ignorable="d"
+             d:DataContext = "{d:DesignInstance Type=local:ExistingProjects, IsDesignTimeCreatable=True}"
              d:DesignHeight="450" d:DesignWidth="630">
+    <UserControl.DataContext>
+        <local:ExistingProjects/>
+    </UserControl.DataContext>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -15,27 +19,27 @@
             Projects
         </TextBlock>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Width="auto" FontSize="32" Margin="0,0,20,0">
+            <Button IsDefault="True" Click="OpenProjectHandler" Width="auto" FontSize="32" Margin="0,0,20,0">
                 Open
             </Button>
-            <Button Width="auto" FontSize="32" Margin="0,0,20,0" >
+            <Button Click="Add_ButtonClick" Width="auto" FontSize="32" Margin="0,0,20,0" >
                 Add
             </Button>
         </StackPanel>
-        <ListView Grid.Row="1" Height="auto" Margin="10">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock/>
-                        <TextBlock/>
-                        <TextBlock/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListViewItem FontSize="32">Test</ListViewItem>
-            <ListViewItem FontSize="32">Test</ListViewItem>
-            <ListViewItem FontSize="32">Test</ListViewItem>
-            <ListViewItem FontSize="32">Test</ListViewItem>
+        <ListView ItemsSource="{Binding Projects}" SelectedIndex="0"
+                  x:Name="ExistingProjectsView" Grid.Row="1" 
+                  Height="auto" Margin="10" MouseDoubleClick="OpenProjectHandler">
+            <ListView.View>
+                <GridView ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    
+                    <GridViewColumn Header="Name" Width="100"
+                                    DisplayMemberBinding="{Binding Path=ProjectName}"/>
+                    <GridViewColumn Header="Path" Width="345"
+                                    DisplayMemberBinding="{Binding Path=FullPath}"/>
+                    <GridViewColumn Header="Last Modified" Width="135"
+                                    DisplayMemberBinding="{Binding Path=LastModified}"/>
+                </GridView>
+            </ListView.View>
         </ListView>
     </Grid>
 </UserControl>
