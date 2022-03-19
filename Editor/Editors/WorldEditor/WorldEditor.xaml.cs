@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Editor.Editors
 {
@@ -35,31 +24,14 @@ namespace Editor.Editors
 
             ((INotifyPropertyChanged)UndoRedoManager.UndoList).PropertyChanged += (_, _) => { Focus(); };
             ((INotifyPropertyChanged)UndoRedoManager.RedoList).PropertyChanged += (_, _) => { Focus(); };
-        }
 
-        private void Undo_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            UndoRedoManager.Undo();
-        }
+            Undo.Command = new RelayCommand(() => { UndoRedoManager.Undo(); });
+            Redo.Command = new RelayCommand(() => { UndoRedoManager.Redo(); });
+            Save.Command = new RelayCommand(() => { Project.Save(); });
 
-        private void Redo_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            UndoRedoManager.Redo();
-        }
-
-        private void Save_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            Project.Save();
-        }
-
-        private void UserControl_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
-                UndoRedoManager.Undo();
-            else if (e.Key == Key.Y && Keyboard.Modifiers == ModifierKeys.Control)
-                UndoRedoManager.Redo();
-            else if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
-                Project.Save();
+            EditorControl.InputBindings.Add(new KeyBinding(Undo.Command, new KeyGesture(Key.Z, ModifierKeys.Control)));
+            EditorControl.InputBindings.Add(new KeyBinding(Redo.Command, new KeyGesture(Key.Y, ModifierKeys.Control)));
+            EditorControl.InputBindings.Add(new KeyBinding(Save.Command, new KeyGesture(Key.S, ModifierKeys.Control)));
         }
     }
 }

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\dev\Atlas 2\Editor\App.xaml
-6-2130679913
+71435991105
 
-15600788833
+20-1666471321
 196-817623582
-Browser\Browser.xaml;Browser\ExistingProjectsView.xaml;Browser\NewProjectView.xaml;Editors\WorldEditor\HierarchyView.xaml;Editors\WorldEditor\WorldEditor.xaml;MainWindow.xaml;
+Browser\Browser.xaml;Browser\ExistingProjectsView.xaml;Browser\NewProjectView.xaml;Editors\WorldEditor\HierarchyView.xaml;Editors\WorldEditor\Inspector.xaml;Editors\WorldEditor\WorldEditor.xaml;MainWindow.xaml;
 
 False
 

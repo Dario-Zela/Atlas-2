@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Accessibility;
 
 namespace Editor
 {
@@ -33,7 +29,7 @@ namespace Editor
         }
     }
 
-    public static class UndoRedoManager
+    public class UndoRedoManager
     {
         private static readonly ObservableCollection<UndoRedoAction> _undoList = new();
         private static readonly ObservableCollection<UndoRedoAction> _redoList = new();
@@ -82,9 +78,9 @@ namespace Editor
         {
             if (!UndoList!.Any()) return;
 
-            _undoList.First().Undo();
+            _undoList.Last().Undo();
             _redoList.Insert(0, _undoList.First());
-            _undoList.RemoveAt(0);
+            _undoList.RemoveAt(_undoList.Count - 1);
 
             OnAvailabilityChanged(EventArgs.Empty);
         }
@@ -94,7 +90,7 @@ namespace Editor
             if (!RedoList!.Any()) return;
 
             _redoList.First().Redo();
-            _undoList.Insert(0, _redoList.First());
+            _undoList.Add(_redoList.First());
             _redoList.RemoveAt(0);
 
             OnAvailabilityChanged(EventArgs.Empty);

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Editor
 {
@@ -16,28 +13,28 @@ namespace Editor
     {
         public static string Extention => ".at";
         private string _name;
-
         [DataMember]
-        public string Name 
+        public string Name
         {
-            get => _name;  
+            get => _name;
             set
             {
-                if(_name != value)
+                if (_name != value)
                 {
                     _name = value;
                     OnProprietyChanged(nameof(Name));
                 }
             }
         }
+
         [DataMember]
         public string Path { get; private set; }
         public string FullPath => $"{Path}{Name}{Extention}";
+
         [DataMember(Name = "ActiveScene")]
         public int _activeScenePos;
-
-        public Scene ActiveScene 
-        { 
+        public Scene ActiveScene
+        {
             get => _scenes[_activeScenePos];
             set
             {
@@ -62,18 +59,16 @@ namespace Editor
             Debug.Assert(File.Exists(filepath));
             return Serialiser.FromFile<Project>(filepath);
         }
-
         public void Unload()
         {
             Application.Current.MainWindow.DataContext = null;
         }
 
-        public static void Save(Project project)
+        public static void Save(Project? project)
         {
             Debug.Assert(project != null);
             Serialiser.ToFile(project, project.FullPath);
         }
-
         public static void Save()
         {
             Save(Current);
@@ -83,18 +78,39 @@ namespace Editor
         {
             Path = filepath;
         }
-
-        public void AddScene(string sceneName)
+        private void InternalAddScene(string sceneName, int pos = -1)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
-            _scenes.Add(new Scene(this, sceneName));
+            _scenes.Insert(pos < 0 ? Scenes!.Count : pos, new Scene(this, sceneName));
         }
-
-        public void RemoveScene(Scene scene)
+        private void InternalRemoveScene(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
         }
+
+        public void AddScene(string sceneName)
+        {
+            InternalAddScene(sceneName);
+            UndoRedoManager.Add(new UndoRedoAction(
+                "New Scene",
+                () => { InternalRemoveScene(Scenes!.Last()); },
+                () => { InternalAddScene(sceneName, Scenes!.Count - 1); }
+                ));
+        }
+        public void RemoveScene(Scene scene)
+        {
+            int pos = Scenes!.IndexOf(scene);
+            InternalRemoveScene(scene);
+            UndoRedoManager.Add(new UndoRedoAction(
+                "New Scene",
+                () => { InternalAddScene(scene.Name, pos); },
+                () => { InternalRemoveScene(scene); }
+                ));
+        }
+
+        public ICommand? AddSceneCommand { get; private set; }
+        public ICommand? RemoveSceneCommand { get; private set; }
 
         [OnDeserialized]
         public void OnDeserialised(StreamingContext context)
@@ -104,6 +120,9 @@ namespace Editor
                 Scenes = new(_scenes);
                 OnProprietyChanged(nameof(Scenes));
             }
+
+            AddSceneCommand = new RelayCommand<string>(sceneName => { AddScene(sceneName); }, null);
+            RemoveSceneCommand = new RelayCommand<Scene>(scene => { RemoveScene(scene); }, null);
         }
 
         public Project(string name, string path)

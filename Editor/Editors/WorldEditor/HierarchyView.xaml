@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Editor.Editors" xmlns:editor="clr-namespace:Editor"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=editor:Project, IsDesignTimeCreatable=True}"
              d:DesignHeight="450" d:DesignWidth="250">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,7 +13,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock>Hierarchy</TextBlock>
-        <Button Focusable="False" Click="AddNewScene" HorizontalAlignment="Left" Grid.Row="1" Width="20">+</Button>
+        <Button Focusable="False" Command="{Binding AddSceneCommand}" CommandParameter="New Scene"
+                HorizontalAlignment="Left" Grid.Row="1" Width="20">+</Button>
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Scenes}">
                 <ItemsControl.ItemsPanel>
@@ -26,11 +26,27 @@
                     <DataTemplate>
                         <Expander Visibility="Visible" IsExpanded="{Binding Path=IsActive, Mode=OneWay}">
                             <Expander.Header>
-                                <Grid>
+                                <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=Name}"/>
-                                </Grid>
+                                    <Button CommandParameter="{Binding}"
+                                        Command="{Binding DataContext.RemoveSceneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">Remove</Button>
+                                    <Button CommandParameter="New Entity"
+                                        Command="{Binding AddEntityCommand}">Add Entity</Button>
+                                </StackPanel>
                             </Expander.Header>
-                            <TextBlock Text="{Binding Path=Name}"/>
+                            <ListView ItemsSource="{Binding Entities}"
+                                      SelectionChanged="ListView_SelectionChanged"
+                                      SelectionMode="Single">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=Name}"/>
+                                            <Button Command="{Binding Parent.RemoveEntityCommand}" 
+                                                    CommandParameter="{Binding}">Remove Entity</Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
                         </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
