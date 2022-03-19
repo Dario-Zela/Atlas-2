@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor
 {
     [DataContract]
+    [KnownType(typeof(Transform))]
     public class GameEntity : ViewModelBase
     {
         private string _name;
@@ -20,7 +16,7 @@ namespace Editor
             get => _name;
             set
             {
-                if(_name != value)
+                if (_name != value)
                 {
                     _name = value;
                     OnProprietyChanged(nameof(Name));
@@ -29,18 +25,35 @@ namespace Editor
         }
 
         [DataMember(Name = "Components")]
-        private readonly ObservableCollection<Component> _components = new();
-        private ReadOnlyObservableCollection<Component> Components { get; }
+        private ObservableCollection<Component> _components { get; set; }
+        public ReadOnlyObservableCollection<Component>? Components { get; private set; }
 
         [DataMember]
         public Scene Parent { get; private set; }
 
-        public GameEntity(Scene parent)
+        [OnDeserialized]
+        public void OnDeserialised(StreamingContext context)
+        {
+            if (_components == null)
+            {
+                _components = new();
+            }
+
+            Components = new(_components);
+            OnProprietyChanged(nameof(Components));
+
+            //AddEntityCommand = new RelayCommand<string>(entityName => { AddEntity(entityName); }, null);
+            //RemoveEntityCommand = new RelayCommand<GameEntity>(entity => { RemoveEntity(entity); }, null);
+        }
+
+        public GameEntity(Scene parent, string name)
         {
             Debug.Assert(parent != null);
             Parent = parent;
-            _name = "Default Entity";
-            Components = new(_components);
+            _name = name;
+
+            OnDeserialised(new StreamingContext());
+            _components!.Add(new Transform(this));
         }
     }
 }

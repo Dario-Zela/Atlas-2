@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Browser
 {
@@ -56,8 +54,8 @@ namespace Editor.Browser
         {
             ReadProjectData();
             var project = _projects.FirstOrDefault(x => x.FullPath == projectData.FullPath);
-            
-            if(project == null)
+
+            if (project == null)
             {
                 project = projectData;
                 project.LastModified = DateTime.Now;
@@ -85,7 +83,7 @@ namespace Editor.Browser
 
             try
             {
-                if(!Directory.Exists(_applicationDataPath)) Directory.CreateDirectory(_applicationDataPath);
+                if (!Directory.Exists(_applicationDataPath)) Directory.CreateDirectory(_applicationDataPath);
                 ReadProjectData();
             }
             catch (Exception ex)

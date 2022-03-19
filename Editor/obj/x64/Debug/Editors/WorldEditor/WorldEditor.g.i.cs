@@ -86,7 +86,7 @@ namespace Editor.Editors {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Editor;component/editors/worldeditor/worldeditor.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Editor;V1.0.0.0;component/editors/worldeditor/worldeditor.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Editors\WorldEditor\WorldEditor.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

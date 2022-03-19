@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Editor.Browser
@@ -39,7 +26,7 @@ namespace Editor.Browser
             if (!string.IsNullOrEmpty(projectPath))
             {
                 dialougeResult = true;
-                window.DataContext = ExistingProjects.Open(new ProjectData() { ProjectName = viewModel.ProjectName, ProjectPath = projectPath});
+                window.DataContext = ExistingProjects.Open(new ProjectData() { ProjectName = viewModel.ProjectName, ProjectPath = projectPath });
             }
             window.DialogResult = dialougeResult;
             window.Close();

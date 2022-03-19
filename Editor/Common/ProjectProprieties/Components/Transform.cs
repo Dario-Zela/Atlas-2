@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor
 {
@@ -19,7 +14,7 @@ namespace Editor
             set
             {
                 if (_position != value)
-                { 
+                {
                     _position = value;
                     OnProprietyChanged(nameof(Position));
                 }

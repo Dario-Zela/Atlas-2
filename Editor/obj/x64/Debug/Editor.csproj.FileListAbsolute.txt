@@ -31,3 +31,5 @@ C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\WorldEditor.baml
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\HierarchyView.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\HierarchyView.baml
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.csproj.CopyComplete
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\Inspector.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\Inspector.baml

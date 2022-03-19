@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Browser
 {
@@ -79,7 +77,7 @@ namespace Editor.Browser
         private bool ValidateProject()
         {
             var path = ProjectPath;
-            if(!Path.EndsInDirectorySeparator(path))
+            if (!Path.EndsInDirectorySeparator(path))
                 path += @"\";
 
             path += $@"{ProjectName}\";
@@ -113,7 +111,7 @@ namespace Editor.Browser
 
         public string CreateProject(ProjectTemplate projectTemplate)
         {
-            if (!ValidateProject()) 
+            if (!ValidateProject())
                 return string.Empty;
 
             var path = ProjectPath;
