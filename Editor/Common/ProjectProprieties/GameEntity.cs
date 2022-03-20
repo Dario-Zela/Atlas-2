@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 
 namespace Editor
 {
+    //Implements the view model base for a game entity
     [DataContract]
     [KnownType(typeof(Transform))]
     public class GameEntity : ViewModelBase
     {
+        //Field and property for the enable status of the entity
         private bool _isEnabled;
         [DataMember]
         public bool IsEnabled
         {
             get => _isEnabled;
-            set 
-            { 
+            set
+            {
                 if (_isEnabled != value)
                 {
                     _isEnabled = value;
@@ -29,20 +28,7 @@ namespace Editor
             }
         }
 
-        public ICommand? RenameCommand { get; private set; }
-        public ICommand? EnableCommand { get; private set; }
-
-        public void Rename(string name)
-        {
-            UndoRedoManager.Add(new UndoRedoAction("Entity Renamed", nameof(Name), this, Name, name));
-            Name = name;
-        }
-        public void Enable(bool status)
-        {
-            UndoRedoManager.Add(new UndoRedoAction("Entity Enabled/Disabled", nameof(IsEnabled), this, IsEnabled, status));
-            IsEnabled = status;
-        }
-
+        //Field and property for the name of the entity
         private string _name;
         [DataMember]
         public string Name
@@ -58,45 +44,77 @@ namespace Editor
             }
         }
 
+        //Commands to rename and enable an entity
+        public ICommand? RenameCommand { get; private set; }
+        public ICommand? EnableCommand { get; private set; }
+
+        //Wraps the set operations with a undo redo action
+        public void Rename(string name)
+        {
+            Logger.Log(MessageType.Trace, $"Renaming Entity {Name} to {name}");
+
+            //Add a changed value UndoRedoAction on Name
+            UndoRedoManager.Add(new UndoRedoAction($"Entity {Name} Renamed to {name}", nameof(Name), this, Name, name));
+            Name = name;
+        }
+        public void Enable(bool status)
+        {
+            Logger.Log(MessageType.Trace, $"Changing the enabled status of Entity {Name} to {status}");
+
+            //Add a changed value UndoRedoAction on IsEnabled
+            UndoRedoManager.Add(new UndoRedoAction($"Entity enabled status Changed to {status}", nameof(IsEnabled), this, IsEnabled, status));
+            IsEnabled = status;
+        }
+
+        //Collection of components owned by the entity
         [DataMember(Name = nameof(Components))]
         private ObservableCollection<Component> _components { get; set; }
         public ReadOnlyObservableCollection<Component>? Components { get; private set; }
 
+        //The parent scene to the object
         [DataMember]
         public Scene Parent { get; private set; }
 
+        //The method run post deserialisation
         [OnDeserialized]
         public void OnDeserialised(StreamingContext context)
         {
+            Logger.Log(MessageType.Trace, $"Deserialising the Entity {Name}");
+
+            //Make sure the entities array isn't null
             if (_components == null)
             {
                 _components = new();
             }
 
+            //Generate the property and invoke the property changed event
             Components = new(_components);
             OnProprietyChanged(nameof(Components));
 
+            //Generate the commands
             RenameCommand = new RelayCommand<string>(newName => Rename(newName), newName => newName != Name);
             EnableCommand = new RelayCommand<bool>(status => Enable(status), null);
-
-            //AddEntityCommand = new RelayCommand<string>(entityName => { AddEntity(entityName); }, null);
-            //RemoveEntityCommand = new RelayCommand<GameEntity>(entity => { RemoveEntity(entity); }, null);
         }
 
         public GameEntity(Scene parent, string name)
         {
-            Debug.Assert(parent != null);
+            //Add the parent, name and set the enabled status to true
             Parent = parent;
             _name = name;
             _isEnabled = true;
 
+            //Run OnDeserialsied
             OnDeserialised(new StreamingContext());
+
+            //Add a transform component
             _components!.Add(new Transform(this));
         }
     }
 
+    //Implements the view model base for a multi selection game entity
     public abstract class MSEntity : ViewModelBase
     {
+        //Field and property for the enable status of the multi select entity
         private bool? _isEnabled;
         public bool? IsEnabled
         {
@@ -111,6 +129,7 @@ namespace Editor
             }
         }
 
+        //Field and property for the name of the multi select entity
         private string? _name;
         public string? Name
         {
@@ -125,75 +144,113 @@ namespace Editor
             }
         }
 
+        //Commands to rename and enable a group of entities
         public ICommand? RenameCommand { get; private set; }
         public ICommand? EnableCommand { get; private set; }
 
+        //Wraps the multi set operations with a undo redo action
         public void Rename(string name)
         {
+            Logger.Log(MessageType.Trace, "Initialising Renaming for Multi Select Object");
+
+            //Adds an action group to rename all selected entities,
+            //with a post command to refreshes the data
             UndoRedoManager.Add(new UndoRedoActionGroup(
-                "Entities Renamed", nameof(Name), SelectedEntities, 
+                $"Entities Renamed to {name}", nameof(Name), SelectedEntities,
                 SelectedEntities.Select((entity, i) => entity.Name), name, () => Refresh()));
 
+            //Changes the name of all selected entities and refreshes the data
             SelectedEntities.ForEach(SelectedEntity => SelectedEntity.Name = name);
-            Name = name;
+            Refresh();
         }
         public void Enable(bool status)
         {
+            Logger.Log(MessageType.Trace, "Initialising Enabling for Multi Select Object");
+
+            //Adds an action group to set enable status of all selected entities,
+            //with a post command to refreshes the data
             UndoRedoManager.Add(new UndoRedoActionGroup(
-                "Entities Enabled/Disabled", nameof(IsEnabled), 
+                "Entities Enabled/Disabled", nameof(IsEnabled),
                 SelectedEntities, SelectedEntities.Select((entity, i) => entity.IsEnabled).Cast<object>(), status, () => Refresh()));
 
+            //Changes the name of all selected entities and refreshes the data
             SelectedEntities.ForEach(SelectedEntity => SelectedEntity.IsEnabled = status);
-            IsEnabled = status;
+            Refresh();
         }
 
+        //Collection of components owned by the multi selection of entities
         [DataMember(Name = nameof(Components))]
         private readonly ObservableCollection<IMSComponent> _components = new();
         public ReadOnlyObservableCollection<IMSComponent>? Components { get; private set; }
 
+        //The list of selected entities
         public List<GameEntity> SelectedEntities { get; }
 
-        protected virtual void UpdateMSPropieties()
+        //Helper function to update an multi select property
+        protected void UpdateMSProperty(string propetyName)
         {
-            if (SelectedEntities.DistinctBy((entity) => { return entity.Name; }).Skip(1).Any())
+            //Check that the property exists
+            if (GetType().GetProperty(propetyName) == null)
             {
-                Name = null;
-            }
-            else
-            {
-                Name = SelectedEntities.First().Name;
+                //If it doesn't log a warning and return
+                Logger.Log(MessageType.Warning, $"Field {propetyName} does not exist -- Nothing set");
+                return;
             }
 
-            if (SelectedEntities.DistinctBy((entity) => { return entity.IsEnabled; }).Skip(1).Any())
+            //If there are more then one value
+            if (SelectedEntities.DistinctBy((entity) => { return entity.GetType().GetProperty(propetyName); }).Skip(1).Any())
             {
-                IsEnabled = null;
+                //Set the property to null
+                GetType().GetProperty(propetyName)?.SetValue(this, null);
             }
+            //Otherwise
             else
             {
-                IsEnabled = SelectedEntities.First().IsEnabled;
+                //Get the value of the property of the first element
+                var value = SelectedEntities.First().GetType().GetProperty(propetyName)!.GetValue(SelectedEntities.First());
+
+                //And set the value of that property in the multi select component to that
+                GetType().GetProperty(propetyName)?.SetValue(this, value);
             }
         }
 
+        //Virtual Update method to be filed by other all properties
+        protected virtual void UpdateMSProperties()
+        {
+            //Update Name and IsEnabled
+            UpdateMSProperty(nameof(Name));
+            UpdateMSProperty(nameof(IsEnabled));
+        }
+
+        //A public method to refresh the status of the multi select property
         public void Refresh()
         {
-            UpdateMSPropieties();
+            Logger.Log(MessageType.Trace, "Refreshing Multi Select Entity");
+
+            UpdateMSProperties();
         }
 
         public MSEntity(List<GameEntity> entities)
         {
-            Debug.Assert(entities?.Any() == true);
+            //Check the the there are entities selected
+            Debug.Assert(entities.Any() == true);
+
+            //Generate the components list and save the selected entities
             Components = new(_components);
             SelectedEntities = entities;
 
+            //Generate the commands
             RenameCommand = new RelayCommand<string>(newName => Rename(newName), newName => newName != Name);
             EnableCommand = new RelayCommand<bool>(status => Enable(status), null);
         }
     }
 
+    //The implementation of MSEntity on a game entity
     public class MSGameEntity : MSEntity
     {
         public MSGameEntity(List<GameEntity> entities) : base(entities)
         {
+            //Refresh the 
             Refresh();
         }
     }

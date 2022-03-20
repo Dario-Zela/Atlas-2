@@ -1,0 +1,2 @@
+C:\dev\Atlas 2\out\bin\x64\Debug\Engine.lib.lastcodeanalysissucceeded
+C:\dev\Atlas 2\out\obj\x64\Debug\NativeCodeAnalysis.read.1.tlog

@@ -3,9 +3,11 @@ using System.Runtime.Serialization;
 
 namespace Editor
 {
+    //The implementation of a transform component
     [DataContract]
     public class Transform : Component
     {
+        //Field and property for the position of the owner
         private Vector3 _position;
         [DataMember]
         public Vector3 Position
@@ -21,6 +23,7 @@ namespace Editor
             }
         }
 
+        //Field and property for the rotation of the owner
         private Vector3 _rotation;
         [DataMember]
         public Vector3 Rotation
@@ -36,6 +39,7 @@ namespace Editor
             }
         }
 
+        //Field and property for the scale of the owner
         private Vector3 _scale;
         [DataMember]
         public Vector3 Scale

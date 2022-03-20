@@ -55,6 +55,7 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
+                            <TextBlock Text=": "/>
                             <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
                         </DockPanel>
                     </DataTemplate>
