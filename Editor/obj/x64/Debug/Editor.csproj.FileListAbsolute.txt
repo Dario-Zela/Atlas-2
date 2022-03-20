@@ -33,3 +33,10 @@ C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\HierarchyView.baml
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editor.csproj.CopyComplete
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\Inspector.g.cs
 C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\Inspector.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Dictionaries\ControlTemplates.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Dictionaries\ControlTemplates.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\App.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\DebugErrorList.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\DebugErrorList.baml
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\LoggerView.g.cs
+C:\dev\Atlas 2\Editor\obj\x64\Debug\Editors\WorldEditor\LoggerView.baml

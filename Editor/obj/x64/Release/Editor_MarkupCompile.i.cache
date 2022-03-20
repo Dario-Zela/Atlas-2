@@ -1,0 +1,20 @@
+﻿Editor
+1.0.0.0
+
+winexe
+C#
+.cs
+C:\dev\Atlas 2\Editor\obj\x64\Release\
+Editor
+none
+false
+TRACE;RELEASE;NET;NET6_0;NETCOREAPP
+C:\dev\Atlas 2\Editor\App.xaml
+10-376701883
+
+261927985426
+196-817623582
+Browser\Browser.xaml;Browser\ExistingProjectsView.xaml;Browser\NewProjectView.xaml;Dictionaries\ControlTemplates.xaml;Editors\WorldEditor\DebugErrorList.xaml;Editors\WorldEditor\HierarchyView.xaml;Editors\WorldEditor\Inspector.xaml;Editors\WorldEditor\LoggerView.xaml;Editors\WorldEditor\WorldEditor.xaml;MainWindow.xaml;
+
+False
+

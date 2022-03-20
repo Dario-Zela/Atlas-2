@@ -4,11 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Editor.Editors"
+             xmlns:common="clr-namespace:Editor"
              mc:Ignorable="d"
+             d:DataContext = "{d:DesignInstance Type=common:GameEntity, IsDesignTimeCreatable=True}"
              d:DesignHeight="450" d:DesignWidth="250">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding Name}"/>
+    <StackPanel Orientation="Vertical">
+        <StackPanel.Style>
+            <Style TargetType="StackPanel">
+                <Style.Triggers>
+                    <Trigger Property="DataContext" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+        <ToggleButton HorizontalAlignment="Left" Width="120" x:Name="AddComponent">
+            <ToggleButton.Content>
+                <DockPanel>
+                    <TextBlock Text="Add Component"/>
+                    <Path Margin="3,0,2,0"
+                          Fill="Black"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4"/>
+                </DockPanel>
+            </ToggleButton.Content>
+        </ToggleButton>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="1" Text="{Binding Name}" Tag="{Binding RenameCommand}"/>
+            <CheckBox Grid.Column="2"
+                      IsChecked="{Binding IsEnabled, Mode=OneWay}"
+                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                      Command="{Binding EnableCommand}">
+                Enabled
+            </CheckBox>
+        </Grid>
+        <ScrollViewer>
             <ListView ItemsSource="{Binding Components}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -18,6 +54,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
-    </Grid>
+        </ScrollViewer>
+    </StackPanel>
 </UserControl>

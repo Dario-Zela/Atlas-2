@@ -28,6 +28,14 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+                <TabControl Grid.Row="1">
+                    <TabItem Header="History">
+                        <local:DebugErrorList/>
+                    </TabItem>
+                    <TabItem Header="Logger">
+                        <local:LoggerView/>
+                    </TabItem>
+                </TabControl>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>

@@ -11,10 +11,16 @@
     <Compile Update="Browser\NewProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Editors\WorldEditor\DebugErrorList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Editors\WorldEditor\HierarchyView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Editors\WorldEditor\Inspector.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Editors\WorldEditor\LoggerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Editors\WorldEditor\WorldEditor.xaml.cs">
@@ -31,10 +37,19 @@
     <Page Update="Browser\NewProjectView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Dictionaries\ControlTemplates.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\DebugErrorList.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editors\WorldEditor\HierarchyView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\Inspector.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\LoggerView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\WorldEditor.xaml">

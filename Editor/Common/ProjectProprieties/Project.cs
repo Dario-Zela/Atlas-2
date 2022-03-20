@@ -31,7 +31,7 @@ namespace Editor
         public string Path { get; private set; }
         public string FullPath => $"{Path}{Name}{Extention}";
 
-        [DataMember(Name = "ActiveScene")]
+        [DataMember(Name = nameof(ActiveScene))]
         public int _activeScenePos;
         public Scene ActiveScene
         {
@@ -48,7 +48,7 @@ namespace Editor
             }
         }
 
-        [DataMember(Name = "Scenes")]
+        [DataMember(Name = nameof(Scenes))]
         private readonly ObservableCollection<Scene> _scenes = new();
         public ReadOnlyObservableCollection<Scene>? Scenes { get; private set; }
 
@@ -62,6 +62,7 @@ namespace Editor
         public void Unload()
         {
             Application.Current.MainWindow.DataContext = null;
+            UndoRedoManager.Reset();
         }
 
         public static void Save(Project? project)
@@ -78,10 +79,18 @@ namespace Editor
         {
             Path = filepath;
         }
-        private void InternalAddScene(string sceneName, int pos = -1)
+        private Scene InternalAddNewScene(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
-            _scenes.Insert(pos < 0 ? Scenes!.Count : pos, new Scene(this, sceneName));
+            var scene = new Scene(this, sceneName);
+            _scenes.Add(scene);
+
+            return scene;
+        }
+        private void InternalInsertScene(Scene scene, int pos = -1)
+        {
+            Debug.Assert(scene != null);
+            _scenes.Insert(pos < 0 ? Scenes!.Count : pos, scene);
         }
         private void InternalRemoveScene(Scene scene)
         {
@@ -91,11 +100,11 @@ namespace Editor
 
         public void AddScene(string sceneName)
         {
-            InternalAddScene(sceneName);
+            var scene = InternalAddNewScene(sceneName);
             UndoRedoManager.Add(new UndoRedoAction(
                 "New Scene",
-                () => { InternalRemoveScene(Scenes!.Last()); },
-                () => { InternalAddScene(sceneName, Scenes!.Count - 1); }
+                () => { InternalRemoveScene(scene); },
+                () => { InternalInsertScene(scene, Scenes!.Count - 1); }
                 ));
         }
         public void RemoveScene(Scene scene)
@@ -103,8 +112,8 @@ namespace Editor
             int pos = Scenes!.IndexOf(scene);
             InternalRemoveScene(scene);
             UndoRedoManager.Add(new UndoRedoAction(
-                "New Scene",
-                () => { InternalAddScene(scene.Name, pos); },
+                "Remove Scene",
+                () => { InternalInsertScene(scene, pos); },
                 () => { InternalRemoveScene(scene); }
                 ));
         }

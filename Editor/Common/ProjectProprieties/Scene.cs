@@ -32,11 +32,11 @@ namespace Editor
 
         public void AddEntity(string entityName)
         {
-            InternalAddEntity(entityName);
+            var entity = InternalAddNewEntity(entityName);
             UndoRedoManager.Add(new UndoRedoAction(
-                "New Scene",
-                () => { InternalRemoveEntity(Entities!.Last()); },
-                () => { InternalAddEntity(entityName, Entities!.Count - 1); }
+                "Add Entity",
+                () => { InternalRemoveEntity(entity); },
+                () => { InternalInsertEntity(entity, Entities!.Count - 1); }
                 ));
         }
         public void RemoveEntity(GameEntity entity)
@@ -44,16 +44,24 @@ namespace Editor
             int pos = Entities!.IndexOf(entity);
             InternalRemoveEntity(entity);
             UndoRedoManager.Add(new UndoRedoAction(
-                "New Scene",
-                () => { InternalAddEntity(entity.Name, pos); },
+                "Remove Entity",
+                () => { InternalInsertEntity(entity, pos); },
                 () => { InternalRemoveEntity(entity); }
                 ));
         }
 
-        private void InternalAddEntity(string entityName, int pos = -1)
+        private GameEntity InternalAddNewEntity(string entityName)
         {
             Debug.Assert(!string.IsNullOrEmpty(entityName.Trim()));
-            _entities!.Insert(pos < 0 ? Entities!.Count : pos, new GameEntity(this, entityName));
+            var entity = new GameEntity(this, entityName);
+            _entities!.Add(entity);
+
+            return entity;
+        }
+        private void InternalInsertEntity(GameEntity entity, int pos = -1)
+        {
+            Debug.Assert(entity != null);
+            _entities!.Insert(pos < 0 ? Entities!.Count : pos, entity);
         }
         private void InternalRemoveEntity(GameEntity entity)
         {
@@ -63,7 +71,7 @@ namespace Editor
 
         public bool IsActive => Project.ActiveScene == this;
 
-        [DataMember(Name = "Scenes")]
+        [DataMember(Name = nameof(Entities))]
         private ObservableCollection<GameEntity>? _entities { get; set; }
         public ReadOnlyObservableCollection<GameEntity>? Entities { get; private set; }
 

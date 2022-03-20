@@ -14,6 +14,12 @@ namespace Editor.Editors
         {
             UndoRedoManager.Reset();
             InitializeComponent();
+
+            Logger.Log(MessageType.Trace, "Test Trace");
+            Logger.Log(MessageType.Info, "Test Info");
+            Logger.Log(MessageType.Warning, "Test Warning");
+            Logger.Log(MessageType.Error, "Test Error");
+
             Loaded += WorldEditor_Loaded;
         }
 
@@ -22,8 +28,8 @@ namespace Editor.Editors
             Loaded -= WorldEditor_Loaded;
             Focus();
 
-            ((INotifyPropertyChanged)UndoRedoManager.UndoList).PropertyChanged += (_, _) => { Focus(); };
-            ((INotifyPropertyChanged)UndoRedoManager.RedoList).PropertyChanged += (_, _) => { Focus(); };
+            ((INotifyPropertyChanged?)UndoRedoManager.UndoList)!.PropertyChanged += (_, _) => { Focus(); };
+            ((INotifyPropertyChanged?)UndoRedoManager.RedoList)!.PropertyChanged += (_, _) => { Focus(); };
 
             Undo.Command = new RelayCommand(() => { UndoRedoManager.Undo(); });
             Redo.Command = new RelayCommand(() => { UndoRedoManager.Redo(); });

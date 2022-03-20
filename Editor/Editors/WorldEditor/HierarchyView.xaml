@@ -36,7 +36,7 @@
                             </Expander.Header>
                             <ListView ItemsSource="{Binding Entities}"
                                       SelectionChanged="ListView_SelectionChanged"
-                                      SelectionMode="Single">
+                                      SelectionMode="Extended">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>

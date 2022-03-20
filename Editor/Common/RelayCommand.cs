@@ -16,11 +16,17 @@ namespace Editor
 
         public bool CanExecute(object? parameter)
         {
+            if (parameter == null)
+                return false;
+
             return _canExecute?.Invoke((T)parameter) ?? true;
         }
 
         public void Execute(object? parameter)
         {
+            if (parameter == null)
+                return;
+
             _execute((T)parameter);
         }
 

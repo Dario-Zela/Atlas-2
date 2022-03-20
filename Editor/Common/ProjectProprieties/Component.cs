@@ -3,8 +3,10 @@ using System.Runtime.Serialization;
 
 namespace Editor
 {
+    public interface IMSComponent { }
+
     [DataContract]
-    public class Component : ViewModelBase
+    public abstract class Component : ViewModelBase
     {
         [DataMember]
         public GameEntity Owner { get; private set; }
@@ -14,5 +16,10 @@ namespace Editor
             Debug.Assert(entity != null);
             Owner = entity;
         }
+    }
+
+    abstract class MSComponent<T> : ViewModelBase, IMSComponent where T : Component
+    {
+
     }
 }

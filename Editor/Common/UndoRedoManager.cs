@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Editor
 {
-    public class UndoRedoAction
+    public interface IUndoRedo
+    {
+        public string Name { get; }
+
+        public abstract void Redo();
+
+        public abstract void Undo();
+    }
+
+    public class UndoRedoAction : IUndoRedo
     {
         private Action _undo;
         private Action _redo;
@@ -27,25 +37,76 @@ namespace Editor
             _undo = undo;
             _redo = redo;
         }
+
+        public UndoRedoAction(string name, string proprietyChanged, object propriety,
+                              object oldValue, object newValue)
+        : this(name,
+              () => propriety.GetType().GetProperty(proprietyChanged)!.SetValue(propriety, oldValue),
+              () => propriety.GetType().GetProperty(proprietyChanged)!.SetValue(propriety, newValue)
+             )
+        { }
     }
 
-    public class UndoRedoManager
+    public class UndoRedoActionGroup : IUndoRedo
     {
-        private static readonly ObservableCollection<UndoRedoAction> _undoList = new();
-        private static readonly ObservableCollection<UndoRedoAction> _redoList = new();
+        public string Name { get; private set; }
+        private List<UndoRedoAction> _actions = new();
+        private Action? _postUndoRedoAction;
 
-        public static ReadOnlyObservableCollection<UndoRedoAction>? UndoList = null;
-        public static ReadOnlyObservableCollection<UndoRedoAction>? RedoList = null;
+        public void Redo()
+        {
+            foreach (var action in _actions)
+            {
+                action.Redo();
+            }
+            _postUndoRedoAction?.Invoke();
+        }
+
+        public void Undo()
+        {
+            foreach (var action in _actions)
+            {
+                action.Undo();
+            }
+            _postUndoRedoAction?.Invoke();
+        }
+
+        public UndoRedoActionGroup(string name, string proprietyChanged, IEnumerable<object> proprieties,
+                      IEnumerable<object> oldValues, object newValue, Action? postUndoRedoAction = null)
+        {
+            Name = name;
+            _postUndoRedoAction = postUndoRedoAction;
+
+            for (int i = 0; i < proprieties.Count(); i++)
+            {
+                _actions.Add(new UndoRedoAction("",
+                    proprietyChanged,
+                    proprieties.ElementAt(i),
+                    oldValues.ElementAt(i),
+                    newValue));
+            }
+        }
+    }
+
+    public static class UndoRedoManager
+    {
+        private static bool _isEditing = false;
+
+        private static readonly ObservableCollection<IUndoRedo> _undoList = new();
+        private static readonly ObservableCollection<IUndoRedo> _redoList = new();
+
+        public static ReadOnlyObservableCollection<IUndoRedo>? UndoList { get; } = new(_undoList);
+        public static ReadOnlyObservableCollection<IUndoRedo>? RedoList { get; } = new(_redoList);
 
         public static bool IsUndoAvailable => _undoList.Any();
         public static bool IsRedoAvailable => _redoList.Any();
 
-        public static event EventHandler IsUndoAvailableChanged;
-        public static event EventHandler IsRedoAvailableChanged;
+        public static event EventHandler? IsUndoAvailableChanged;
+        public static event EventHandler? IsRedoAvailableChanged;
 
         private static void OnAvailabilityChanged(EventArgs e)
         {
-            EventHandler handler = IsUndoAvailableChanged;
+            EventHandler? handler = IsUndoAvailableChanged;
 
             if (handler != null)
             {
@@ -60,26 +121,36 @@ namespace Editor
             }
         }
 
-        public static void Add(UndoRedoAction action)
+        public static void Add(IUndoRedo action)
         {
-            _undoList.Add(action);
-            _redoList.Clear();
-            OnAvailabilityChanged(EventArgs.Empty);
+            if (!_isEditing)
+            {
+                Logger.Log(MessageType.Trace, action.Name);
+                _undoList.Add(action);
+                _redoList.Clear();
+                OnAvailabilityChanged(EventArgs.Empty);
+            }
         }
 
         public static void Reset()
         {
-            _undoList.Clear();
-            _redoList.Clear();
-            OnAvailabilityChanged(EventArgs.Empty);
+            if (!_isEditing)
+            {
+                _undoList.Clear();
+                _redoList.Clear();
+                OnAvailabilityChanged(EventArgs.Empty);
+            }
         }
 
         public static void Undo()
         {
             if (!UndoList!.Any()) return;
 
+            _isEditing = true;
             _undoList.Last().Undo();
-            _redoList.Insert(0, _undoList.First());
+            _isEditing = false;
+
+            _redoList.Insert(0, _undoList.Last());
             _undoList.RemoveAt(_undoList.Count - 1);
 
             OnAvailabilityChanged(EventArgs.Empty);
@@ -89,17 +160,18 @@ namespace Editor
         {
             if (!RedoList!.Any()) return;
 
+            _isEditing = true;
             _redoList.First().Redo();
+            _isEditing = false;
+
             _undoList.Add(_redoList.First());
             _redoList.RemoveAt(0);
 
             OnAvailabilityChanged(EventArgs.Empty);
         }
 
-        public static void Initialise()
+        static UndoRedoManager()
         {
-            UndoList = new(_undoList);
-            RedoList = new(_redoList);
             IsUndoAvailableChanged += (sender, e) => { return; };
             IsRedoAvailableChanged += (sender, e) => { return; };
         }

@@ -9,8 +9,6 @@ namespace Editor
     {
         public MainWindow()
         {
-            // TODO: Initialise Components
-            UndoRedoManager.Initialise();
             OpenHub();
             InitializeComponent();
             Closing += MainWindow_Closing;
